@@ -8,14 +8,21 @@ from urllib.parse import unquote
 import dotenv
 import pandas as pd
 import requests
+import os
+import json
 
 URL_TEMPLATE = "https://www.zhihu.com/api/v4/creators/analysis/realtime/content/list?type={content_type}&format=csv"
 DEFAULT_FILENAME = "zhihu_realtime_content.xls"
 OUTPUT_DIR = Path("downloads")
-ACCOUNTS = (
-    {"name": "GGapa", "slug": "ggapa", "cookie_key": "COOKIE_A"},
-    # {"name": "Jarrett Ye", "slug": "jarrett", "cookie_key": "COOKIE_B"},
-)
+# ACCOUNTS = (
+#     {"name": "GGapa", "slug": "ggapa", "cookie_key": "COOKIE_A"},
+#     # {"name": "Jarrett Ye", "slug": "jarrett", "cookie_key": "COOKIE_B"},
+# )
+accounts_str = os.getenv("ACCOUNTS")
+if accounts_str:
+    ACCOUNTS = json.loads(accounts_str)
+else:
+    ACCOUNTS = []
 CONTENT_TYPES = ("article", "answer")
 
 

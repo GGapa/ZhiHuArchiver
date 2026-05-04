@@ -1,9 +1,18 @@
 name: Build and Deploy to GitHub Pages
 
+env:
+  GITHUB_USER: GGapa
+  REPO_NAME: ZhiHuArchive
+  SITE_TITLE: GGapa 的知乎备份
+  SITE_DESCRIPTION: GGapa 的知乎文章和回答备份目录
+
 on:
   push:
     branches:
       - main
+      - dev
+    paths: 
+      - '**.json'
   workflow_dispatch:
 
 jobs:

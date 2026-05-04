@@ -1,0 +1,40 @@
+name: Sync to ZhiHuArchive
+
+on:
+  push:
+    branches: [main]  # 根据你的主分支名调整
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ZhiHuArchiver
+        uses: actions/checkout@v4
+        with:
+          path: archiver
+
+      - name: Checkout ZhiHuArchive
+        uses: actions/checkout@v4
+        with:
+          repository: GGapa/ZhiHuArchive
+          token: ${{ secrets.SYNC_TOKEN }}
+          path: archive
+
+      - name: Sync files
+        run: |
+          # 把 archiver 的代码文件同步到 archive
+          # 按需调整要同步的内容
+          rsync -av --exclude='.git' \
+                    --exclude='.github' \
+                    --exclude='README.md' \
+                    archiver/ archive/
+
+      - name: Commit and push
+        working-directory: archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b sync-test
+          git add -A
+          git diff --staged --quiet || git commit -m "Sync from ZhiHuArchiver @ ${{ github.sha }}"
+          git push origin sync-test

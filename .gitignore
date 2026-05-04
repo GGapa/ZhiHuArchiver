@@ -1,0 +1,15 @@
+*.csv
+*.ipynb
+*.html
+*.xml
+*.epub
+.env
+.DS_Store
+/html
+/downloads
+/article
+/answer
+paths.json
+censorship.json
+not_found_paths.txt
+uv.lock

@@ -9,6 +9,7 @@
 /downloads
 /article
 /answer
+/__pycache__
 paths.json
 censorship.json
 not_found_paths.txt

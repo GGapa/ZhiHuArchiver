@@ -5,18 +5,19 @@ from tqdm import tqdm
 from feedgen.feed import FeedGenerator
 import zoneinfo
 from bs4 import BeautifulSoup
+import config
 
 
 article_ids = [file.stem for file in Path("./article").glob("*.json")]
 answer_ids = [file.stem for file in Path("./answer").glob("*.json")]
 
 fg = FeedGenerator()
-fg.id("https://ggapa.github.io/ZhiHuArchive/feed.xml")
-fg.title("GGapa")
-fg.link(href="https://ggapa.github.io/ZhiHuArchive/", rel="self")
-fg.description("知乎账号 @GGapa 的文章和回答的存档")
-# fg.icon("https://ggapa.github.io/ZhiHuArchive/favicon.ico")
-# fg.logo("https://ggapa.github.io/ZhiHuArchive/favicon.ico")
+fg.id(f"{config.BASE_URL}/feed.xml")
+fg.title(config.SITE_TITLE)
+fg.link(href=f"{config.BASE_URL}/", rel="self")
+fg.description(config.SITE_DESCRIPTION)
+# fg.icon(f"{config.BASE_URL}/favicon.ico")
+# fg.logo(f"{config.BASE_URL}/favicon.ico")
 
 
 def add_item(data, full_html):
@@ -28,14 +29,14 @@ def add_item(data, full_html):
     fe = fg.add_entry()
     fe.title(title)
     fe.link(
-        href=f"https://ggapa.github.io/ZhiHuArchive/{file.stem}.html",
+        href=f"{config.BASE_URL}/{file.stem}.html",
         rel="alternate",
     )
     fe.link(href=f"https://zhuanlan.zhihu.com/p/{data['id']}", rel="related")
     fe.content(full_html, type="html")
     fe.summary(strip_html_tags(data.get("excerpt", "")))
     fe.published(created_timestamp)
-    fe.guid(f"https://ggapa.github.io/ZhiHuArchive/{file.stem}.html")
+    fe.guid(f"{config.BASE_URL}/{file.stem}.html")
 
 
 def replace_url(url: str) -> str:
@@ -151,7 +152,7 @@ article_template = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta property="og:type" content="website">
     <meta property="og:title" content="${"title"} | ZhiHu Archive">
-    <meta property="og:site_name" content="ZhiHu Archive for GGapa">
+    <meta property="og:site_name" content="${"site_title"}">
     <meta property="og:url" content="${"url"}">
     <meta property="og:image" content="${"image_url"}">
     <meta property="og:description" content="${"excerpt"}">
@@ -162,8 +163,7 @@ article_template = """<!DOCTYPE html>
     <meta name="twitter:title" content="${"title"} | ZhiHu Archive">
     <meta name="twitter:description" content="${"excerpt"}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <meta name="google-site-verification" content="U7ZAFUgGNK60mmMqaRygg5vy-k8pwbPbDFXNjDCu7Xk" />
-    <link rel="alternate" type="application/rss+xml" title="ZhiHu Archive for GGapa" href="https://ggapa.github.io/ZhiHuArchive/feed.xml">
+    <link rel="alternate" type="application/rss+xml" title="${"site_title"}" href="${"base_url"}/feed.xml">
     <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/yue.css@0.4.0/yue.css">
     <script>
         const redirect = ${"redirect"};
@@ -260,7 +260,7 @@ article_template = """<!DOCTYPE html>
     </article>
     <footer>
         <p style="color: #999; font-size: 0.85em; text-align: center; margin-top: 2em;">
-            本页面由 <a href="https://github.com/GGapa/ZhiHuArchive" target="_blank" rel="noopener noreferrer">ZhiHuArchive</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>。
+            本页面由 <a href="${"repo_url"}" target="_blank" rel="noopener noreferrer">ZhiHuArchive</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>。
         </p>
     </footer>
 </body>
@@ -283,7 +283,10 @@ rss_article_template = """<main>
 def fill_article_template(data: dict, is_rss: bool = False) -> str:
     template = rss_article_template if is_rss else article_template
     return (
-        template.replace('${"title"}', data["title"])
+        template.replace('${"site_title"}', config.SITE_TITLE)
+        .replace('${"base_url"}', config.BASE_URL)
+        .replace('${"repo_url"}', f"https://github.com/{config.GITHUB_USER}/{config.REPO_NAME}")
+        .replace('${"title"}', data["title"])
         .replace('${"url"}', f"https://zhuanlan.zhihu.com/p/{file.stem}")
         .replace('${"excerpt"}', strip_html_tags(data.get("excerpt", "")))
         .replace('${"redirect"}', "false")
@@ -342,7 +345,7 @@ answer_template = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta property="og:type" content="website">
     <meta property="og:title" content="${"title"} - @${"author"} | ZhiHu Archive">
-    <meta property="og:site_name" content="ZhiHu Archive for GGapa">
+    <meta property="og:site_name" content="${"site_title"}">
     <meta property="og:description" itemprop="description" content="${"excerpt"}">
     <meta property="og:url" content="${"url"}">
     <meta name="description" content="${"excerpt"}">
@@ -352,8 +355,7 @@ answer_template = """<!DOCTYPE html>
     <meta name="twitter:title" content="${"title"} - @${"author"} | ZhiHu Archive">
     <meta name="twitter:description" content="${"excerpt"}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <meta name="google-site-verification" content="U7ZAFUgGNK60mmMqaRygg5vy-k8pwbPbDFXNjDCu7Xk" />
-    <link rel="alternate" type="application/rss+xml" title="ZhiHu Archive for GGapa" href="https://ggapa.github.io/ZhiHuArchive/feed.xml">
+    <link rel="alternate" type="application/rss+xml" title="${"site_title"}" href="${"base_url"}/feed.xml">
     <script>
         const redirect = ${"redirect"};
         if (redirect) {
@@ -441,7 +443,7 @@ answer_template = """<!DOCTYPE html>
     </article>
     <footer>
         <p style="color: #999; font-size: 0.85em; text-align: center; margin-top: 2em;">
-            本页面由 <a href="https://github.com/GGapa/ZhiHuArchive" target="_blank" rel="noopener noreferrer">ZhiHuArchive</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>。
+            本页面由 <a href="${"repo_url"}" target="_blank" rel="noopener noreferrer">ZhiHuArchive</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>。
         </p>
     </footer>
 </body>
@@ -478,7 +480,10 @@ def fill_answer_template(data: dict, is_rss: bool = False) -> str:
             process_content(question_detail),
         )
     return (
-        template.replace('${"title"}', data["question"]["title"])
+        template.replace('${"site_title"}', config.SITE_TITLE)
+        .replace('${"base_url"}', config.BASE_URL)
+        .replace('${"repo_url"}', f"https://github.com/{config.GITHUB_USER}/{config.REPO_NAME}")
+        .replace('${"title"}', data["question"]["title"])
         .replace(
             '${"url"}',
             f"https://www.zhihu.com/question/{data['question']['id']}/answer/{file.stem}",

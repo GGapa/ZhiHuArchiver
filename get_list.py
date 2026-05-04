@@ -76,7 +76,13 @@ def save_csv(df: pd.DataFrame, path: Path) -> None:
 
 def download_for_account(account: dict, content_type: str, date_str: str) -> None:
     cookie = get_cookie_by_key(account["cookie_key"])
-    response = fetch_content(content_type, cookie)
+    try:
+        response = fetch_content(content_type, cookie)
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 401:
+            print(f"❌ {account['name']} 的 Cookie 已过期，请重新获取：")
+            return
+        raise
     server_filename = normalize_filename(
         resolve_filename(response.headers.get("Content-Disposition"))
     )

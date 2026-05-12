@@ -18,6 +18,8 @@ OUTPUT_DIR = Path("downloads")
 #     {"name": "GGapa", "slug": "ggapa", "cookie_key": "COOKIE_A"},
 #     # {"name": "Jarrett Ye", "slug": "jarrett", "cookie_key": "COOKIE_B"},
 # )
+from dotenv import load_dotenv
+load_dotenv()
 accounts_str = os.getenv("ACCOUNTS")
 if accounts_str:
     ACCOUNTS = json.loads(accounts_str)
@@ -127,9 +129,6 @@ def cleanup_old_xls() -> None:
 if __name__ == "__main__":
     print("测试 Cookie 读取:")
     try:
-        from dotenv import load_dotenv
-        load_dotenv()
-        import os
         cookie = os.getenv("COOKIE_A")
         if cookie:
             print("✅ COOKIE_A 读取成功！长度:", len(cookie))

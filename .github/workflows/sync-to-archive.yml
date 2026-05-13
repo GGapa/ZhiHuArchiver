@@ -23,12 +23,17 @@ jobs:
 
       - name: Sync files
         run: |
-          # 把 archiver 的代码文件同步到 archive
-          # 按需调整要同步的内容
-          rsync -av --exclude='.git' \
-                    --exclude='.github' \
-                    --exclude='README.md' \
-                    archiver/ archive/
+          # 同步所有 .py 文件
+          rsync -av --include='*/' --include='*.py' --exclude='*' \
+            archiver/ archive/
+          
+          # 同步 build-and-deploy.yml
+          mkdir -p archive/.github/workflows
+          cp archiver/.github/workflows/build-and-deploy.yml \
+             archive/.github/workflows/build-and-deploy.yml
+
+          cp archiver/.env.example \
+             archive/.env.example
 
       - name: Commit and push
         working-directory: archive

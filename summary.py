@@ -440,9 +440,16 @@ for answer in answers:
         </div>
 """
 
-html_content += """
+html_content += f"""
     </div>
 </body>
+<footer>
+    <p style="color: #999; font-size: 0.85em; text-align: center; margin-top: 2em;">
+        本站由 <a href="https://github.com/GGapa/ZhiHuArchiver" target="_blank" rel="noopener noreferrer">ZhiHuArchiver</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>；
+        <br>
+        相关内容归档储存于 <a href="https://github.com/{config.GITHUB_USER}/{config.REPO_NAME}" target="_blank" rel="noopener noreferrer">{config.REPO_NAME}</a> 当中。
+    </p>
+</footer>
 </html>
 """
 

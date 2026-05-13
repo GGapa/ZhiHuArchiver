@@ -443,7 +443,9 @@ answer_template = """<!DOCTYPE html>
     </article>
     <footer>
         <p style="color: #999; font-size: 0.85em; text-align: center; margin-top: 2em;">
-            本页面由 <a href="${"repo_url"}" target="_blank" rel="noopener noreferrer">ZhiHuArchive</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>。
+            本站由 <a href="https://github.com/GGapa/ZhiHuArchiver" target="_blank" rel="noopener noreferrer">ZhiHuArchiver</a> 渲染，模板参考 <a href="https://github.com/frostming/fxzhihu" target="_blank" rel="noopener noreferrer">FxZhihu</a>；
+            <br>
+            相关内容归档储存于 <a href="${"repo_url"}" target="_blank" rel="noopener noreferrer">${"repo_name"}</a> 当中。
         </p>
     </footer>
 </body>
@@ -483,6 +485,7 @@ def fill_answer_template(data: dict, is_rss: bool = False) -> str:
         template.replace('${"site_title"}', config.SITE_TITLE)
         .replace('${"base_url"}', config.BASE_URL)
         .replace('${"repo_url"}', f"https://github.com/{config.GITHUB_USER}/{config.REPO_NAME}")
+        .replace('${"repo_name"}', f"{config.REPO_NAME}")
         .replace('${"title"}', data["question"]["title"])
         .replace(
             '${"url"}',

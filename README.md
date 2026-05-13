@@ -4,7 +4,7 @@
 
 # 如何使用？
 
-Fork 该仓库至你的账户下，将仓库名更改为你喜欢的名字，当然保持不变也是没有问题的。
+Fork [此仓库](https://github.com/GGapa/ZhiHuArchiver/)至你的账户下，将仓库名更改为你喜欢的名字，当然保持不变也是没有问题的。
 
 接着，获取你的知乎 Cookie，并根据 `.env.example` 配置你自己的 `.env`，然后根据提示修改并配置 `.github/workflows/build-and-deploy.yml`
 

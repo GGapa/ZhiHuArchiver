@@ -1,10 +1,10 @@
 name: Build and Deploy to GitHub Pages
 
 env:
-  GITHUB_USER: GGapa
-  REPO_NAME: ZhiHuArchive
-  SITE_TITLE: GGapa 的知乎备份
-  SITE_DESCRIPTION: GGapa 的知乎文章和回答备份目录
+  GITHUB_USER: GGapa       # 你的 Github 账号名
+  REPO_NAME: ZhiHuArchive      # 你的 Github 仓库名
+  SITE_TITLE: GGapa 的知乎备份     # 你的站点名
+  SITE_DESCRIPTION: GGapa 的知乎文章和回答备份目录     # 你的站点描述，用于搜索引擎
 
 on:
   push:

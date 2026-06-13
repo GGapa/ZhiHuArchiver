@@ -7,6 +7,13 @@ from datetime import datetime, timezone
 from bs4 import BeautifulSoup
 import config
 
+try:
+    from personal_tags import get_personal_tags
+except ImportError:
+    def get_personal_tags() -> str:
+        return ""
+
+
 # Load censorship data
 censorship_path = Path("censorship.json")
 if censorship_path.exists():
@@ -315,6 +322,7 @@ html_content = f"""<!DOCTYPE html>
     <meta property="twitter:card" content="summary">
     <meta name="twitter:title" content="{config.SITE_TITLE}">
     <meta name="twitter:description" content="{config.SITE_DESCRIPTION}">
+    {get_personal_tags()}
     <style>
         body {{ max-width: 800px; margin: 0 auto; padding: 20px; }}
         .item {{ margin: 10px 0; }}

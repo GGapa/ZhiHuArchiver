@@ -7,13 +7,6 @@ import zoneinfo
 from bs4 import BeautifulSoup
 import config
 
-try:
-    from personal_tags import get_personal_tags
-except ImportError:
-    def get_personal_tags() -> str:
-        return ""
-
-
 article_ids = [file.stem for file in Path("./article").glob("*.json")]
 answer_ids = [file.stem for file in Path("./answer").glob("*.json")]
 
@@ -169,8 +162,7 @@ article_template = """<!DOCTYPE html>
     <meta name="twitter:title" content="${"title"} | ZhiHu Archive">
     <meta name="twitter:description" content="${"excerpt"}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    ${\"personal_tags\"}
-    <link rel="alternate" type="application/rss+xml" title="${"site_title"}" href="${"base_url"}/feed.xml">
+    <link rel="alternate" type="application/rss+xml" title="${\"site_title\"}" href="${\"base_url\"}/feed.xml">
     <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/yue.css@0.4.0/yue.css">
     <script>
         const redirect = ${"redirect"};
@@ -310,7 +302,6 @@ def fill_article_template(data: dict, is_rss: bool = False) -> str:
         .replace('${"reference"}', extract_reference(data["content"]))
         .replace('${"column_title"}', data.get("column", {}).get("title", "无"))
         .replace('${"column_description"}', data.get("column", {}).get("description", ""))
-        .replace('${"personal_tags"}', get_personal_tags())
         .replace("    ", "")
     )
 
@@ -363,8 +354,7 @@ answer_template = """<!DOCTYPE html>
     <meta name="twitter:title" content="${"title"} - @${"author"} | ZhiHu Archive">
     <meta name="twitter:description" content="${"excerpt"}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    ${\"personal_tags\"}
-    <link rel="alternate" type="application/rss+xml" title="${"site_title"}" href="${"base_url"}/feed.xml">
+    <link rel="alternate" type="application/rss+xml" title="${\"site_title\"}" href="${\"base_url\"}/feed.xml">
     <script>
         const redirect = ${"redirect"};
         if (redirect) {
@@ -513,7 +503,6 @@ def fill_answer_template(data: dict, is_rss: bool = False) -> str:
         .replace('${"question"}', question_block)
         .replace('${"content"}', data["content"])
         .replace('${"reference"}', extract_reference(data["content"]))
-        .replace('${"personal_tags"}', get_personal_tags())
         .replace("    ", "")
     )
 

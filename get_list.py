@@ -48,7 +48,7 @@ def get_cookie_by_key(cookie_key: str) -> str:
     cookie = dotenv.get_key(".env", cookie_key)
     if not cookie:
         raise RuntimeError(f"{cookie_key} is missing in .env")
-    return cookie
+    return cookie.strip()
 
 
 def fetch_content(content_type: str, cookie: str) -> requests.Response:
